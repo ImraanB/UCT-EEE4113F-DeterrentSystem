@@ -6,6 +6,8 @@
 #include "esp_camera.h"
 #include "time.h"
 
+
+//----------------------------------------------------------------
 // SD card transfer mode
 #define ONE_BIT_MODE false
 
@@ -38,11 +40,14 @@ typedef struct struct_event {
 
 struct_event currentEvent;
 
+//WebServer--------------------------------------------------------------
+
 
 void setup() {
   // Initialize Serial Monitor
   Serial.begin(115200);
 
+  // Wifi-------------------------------------------------------------
   // Set the device as a Station and Soft Access Point simultaneously
   WiFi.mode(WIFI_AP_STA);
   
@@ -60,7 +65,7 @@ void setup() {
   // Configure NTP
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
-  // Init ESP-NOW
+  // Init ESP-NOW-----------------------------------------------------
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
@@ -69,7 +74,7 @@ void setup() {
   // get recv packer info
   esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 
-  // Camera config
+  // Camera config----------------------------------------------------
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -129,7 +134,7 @@ void setup() {
   s -> set_hmirror(s, 1);
   #endif
 
-  // SD card init
+  // SD card init-------------------------------------------------------
   if (!SD_MMC.begin("/sdcard", ONE_BIT_MODE)) {
     Serial.println("Card Mount Failed");
     return;
@@ -152,7 +157,9 @@ void setup() {
   else {
     Serial.println("File already exists");  
   }
-  file.close();    
+  file.close();
+  //WebServer-----------------------------------------------------------------
+
 }
  
 void loop() {
