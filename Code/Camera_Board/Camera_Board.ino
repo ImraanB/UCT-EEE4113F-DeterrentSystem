@@ -182,7 +182,7 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
   currentEvent.time=storeTime();
   currentEvent.state=incomingEvent.state;
   logData();
-  if (currentEvent.state=="highAlert"){
+  if (currentEvent.state=="highAlert"||currentEvent.state=="emergency"){
     takePicture();
   }
 }
