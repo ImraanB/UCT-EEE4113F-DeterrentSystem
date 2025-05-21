@@ -11,7 +11,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  myservo.write(180);
+  myservo.write(120);
   delay(1000);
   myservo.write(0);
   delay(1500);
