@@ -1,11 +1,11 @@
-#include <Servo.h>
+#include <ESP32Servo.h>
 
 Servo myservo;
 
 
 void setup() {
   // put your setup code here, to run once:
-  myservo.attach(6);
+  myservo.attach(33);
 
 }
 
