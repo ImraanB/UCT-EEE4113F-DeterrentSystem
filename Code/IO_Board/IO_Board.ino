@@ -17,6 +17,16 @@ unsigned long currentMillis =0;
 unsigned long previousMillis = 0;    
 const long interval = 5000;        
 int distToFence =100; //mm
+
+unsigned long currentMillis_2 =0;
+unsigned long previousMillis_2 = 0;    
+const long flash_interval = 600;  
+int LEDstate= LOW;
+
+unsigned long currentMillis_3 =0;
+unsigned long previousMillis_3 = 0;    
+const long spray_interval = 1000; 
+int servoPos=HIGH;
 Servo myservo; //variable to control servo
 long randNumber; //random number to alternate between deterrent methods
 
@@ -126,6 +136,12 @@ void loop() {
     if(Target()){
       state="highAlert";
     }
+    audioOff();
+    light_all_Off();
+    myservo.write(120);
+    servoPos=HIGH;
+    
+
   }else if (state=="warning"){
     // if no further movement, go back to idle after 10 seconds
     currentMillis = millis();
@@ -141,12 +157,7 @@ void loop() {
     }
 
     // deterrents for warning
-    Serial.println("execute");
-    light_all();
-
-    
-
-
+    flash_lights();
   }
   
   else if (state=="highAlert"){
@@ -157,7 +168,9 @@ void loop() {
       state="emergency";
     }
     // deterrents for high alert
-    light_all(), audio(), motor();
+    audioOn();
+    flash_lights();
+    motor();
     
   }
   else if (state=="emergency"){
@@ -165,7 +178,10 @@ void loop() {
       state="idle";
     }
     //during emergency
-
+    audioOff();
+    light_all_Off();
+    myservo.write(120);
+    servoPos=HIGH;
   }
 
   Serial.println(result_target.x);  // debugging
@@ -283,25 +299,50 @@ bool gotThrough(){
 }
 
 void motor(){ //function to activate the motor
-  myservo.write(120);
-  delay(1000);
-  myservo.write(0);
-  delay(1500);
+    currentMillis_3 = millis();
+    if (currentMillis_3 - previousMillis_3 >= spray_interval){
+      previousMillis_3=millis();
+      if (servoPos){
+        myservo.write(0);
+        servoPos=LOW;
+      }else{
+        myservo.write(120);
+        servoPos=HIGH;
+      }
+    }
 }
 
-void audio(){ //function to activate the auditory deterrents
-  digitalWrite(32,HIGH),digitalWrite(12,HIGH);
-  delay(3000);
-  digitalWrite(32,LOW),digitalWrite(12,LOW);
-  delay(3000);
+void audioOn(){ //function to activate the auditory deterrents
+  digitalWrite(32,HIGH);
+  digitalWrite(12,HIGH);
 }
 
-void light_all(){ //function to ensure that all the lights flash
-   digitalWrite(25,HIGH), digitalWrite(26,HIGH), digitalWrite(27,HIGH) ;
-  delay(600);
+void audioOff(){ //function to activate the auditory deterrents
+  digitalWrite(32,LOW);
+  digitalWrite(12,LOW);
+}
+
+
+void light_all_On(){ //function to turn all the lights on
+  digitalWrite(25,HIGH), digitalWrite(26,HIGH), digitalWrite(27,HIGH);
+  LEDstate=HIGH;
+}
+
+void light_all_Off(){ //function to turn all the lights off
   digitalWrite(25,LOW), digitalWrite(26,LOW), digitalWrite(27,LOW);
-  delay(600);
+  LEDstate=LOW;
+}
 
+void flash_lights(){
+    currentMillis_2 = millis();
+    if (currentMillis_2 - previousMillis_2 >= flash_interval){
+      previousMillis_2=millis();
+      if (LEDstate){
+        light_all_Off();
+      }else{
+        light_all_On();
+      }
+    }
 }
 
 void light_alternate(){ //function to ensure that lights alternate flashing
