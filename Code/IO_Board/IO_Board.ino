@@ -3,6 +3,7 @@
 #include <esp_wifi.h>
 #include <WiFi.h>
 #include <LD2450.h>
+#include <ESP32Servo.h> 
 
 // Pin assignments
 int PIR_Pin = 4;
@@ -14,8 +15,10 @@ int stateReset=15;  //connect to camera board pin 16
 String state = "idle";
 unsigned long currentMillis =0;
 unsigned long previousMillis = 0;    
-const long interval = 10000;        
+const long interval = 5000;        
 int distToFence =100; //mm
+Servo myservo; //variable to control servo
+long randNumber; //random number to alternate between deterrent methods
 
 // SENSOR INSTANCE
 LD2450 ld2450;
@@ -56,7 +59,15 @@ void setup() {
 
   // Set pins
   pinMode(PIR_Pin, INPUT);     // declare sensor as input
-  pinMode(stateReset, INPUT);  
+  pinMode(stateReset, INPUT);
+
+  myservo.attach(33); //ensure that pwm for servo motor is attached to pin 33
+  pinMode(32, OUTPUT); //audio 1 is connected to pin 32
+  pinMode(12,OUTPUT); //audio 2 is connected to pin 12
+  pinMode(25, OUTPUT);//light 1 connected to pin 25
+  pinMode(26, OUTPUT);//light 2 connected to pin 26
+  pinMode(27, OUTPUT);//light 3 connected to pin 27
+
 
   //LD2450--------------------------------------------------------------------
   Serial1.begin(256000, SERIAL_8N1, radarRX, radarTX);  //Init radar comms
@@ -130,6 +141,10 @@ void loop() {
     }
 
     // deterrents for warning
+    Serial.println("execute");
+    light_all();
+
+    
 
 
   }
@@ -142,6 +157,7 @@ void loop() {
       state="emergency";
     }
     // deterrents for high alert
+    light_all(), audio(), motor();
     
   }
   else if (state=="emergency"){
@@ -265,6 +281,48 @@ bool gotThrough(){
     return LOW;
   }
 }
+
+void motor(){ //function to activate the motor
+  myservo.write(120);
+  delay(1000);
+  myservo.write(0);
+  delay(1500);
+}
+
+void audio(){ //function to activate the auditory deterrents
+  digitalWrite(32,HIGH),digitalWrite(12,HIGH);
+  delay(3000);
+  digitalWrite(32,LOW),digitalWrite(12,LOW);
+  delay(3000);
+}
+
+void light_all(){ //function to ensure that all the lights flash
+   digitalWrite(25,HIGH), digitalWrite(26,HIGH), digitalWrite(27,HIGH) ;
+  delay(600);
+  digitalWrite(25,LOW), digitalWrite(26,LOW), digitalWrite(27,LOW);
+  delay(600);
+
+}
+
+void light_alternate(){ //function to ensure that lights alternate flashing
+  digitalWrite(25,HIGH);
+  digitalWrite(27,LOW);
+  digitalWrite(26,LOW);
+  delay(2000);
+  digitalWrite(26,HIGH);
+  digitalWrite(25,LOW);
+  digitalWrite(27,LOW);
+  delay(2000);
+  digitalWrite(27,HIGH);
+  digitalWrite(26,LOW);
+  digitalWrite(25,LOW);
+  delay(2000);
+
+}
+
+
+
+
 
 
 

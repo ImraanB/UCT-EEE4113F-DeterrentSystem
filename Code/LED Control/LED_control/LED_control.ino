@@ -1,5 +1,4 @@
 long randNumber;
-int leds[] = {2,4,7};
 
 void setup() {
   // put your setup code here, to run once:
