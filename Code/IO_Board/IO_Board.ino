@@ -27,6 +27,8 @@ unsigned long currentMillis_3 =0;
 unsigned long previousMillis_3 = 0;    
 const long spray_interval = 1000; 
 int servoPos=HIGH;
+int servo_HP=0;
+int servo_LP=75;
 Servo myservo; //variable to control servo
 long randNumber; //random number to alternate between deterrent methods
 
@@ -138,7 +140,7 @@ void loop() {
     }
     audioOff();
     light_all_Off();
-    myservo.write(120);
+    myservo.write(servo_HP);
     servoPos=HIGH;
     
 
@@ -180,7 +182,7 @@ void loop() {
     //during emergency
     audioOff();
     light_all_Off();
-    myservo.write(120);
+    myservo.write(servo_HP);
     servoPos=HIGH;
   }
 
@@ -303,10 +305,10 @@ void motor(){ //function to activate the motor
     if (currentMillis_3 - previousMillis_3 >= spray_interval){
       previousMillis_3=millis();
       if (servoPos){
-        myservo.write(0);
+        myservo.write(servo_LP);
         servoPos=LOW;
       }else{
-        myservo.write(120);
+        myservo.write(servo_HP);
         servoPos=HIGH;
       }
     }
