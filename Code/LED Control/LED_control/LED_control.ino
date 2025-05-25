@@ -15,14 +15,14 @@ void loop() {
   // put your main code here, to run repeatedly:
 
 
-  digitalWrite(25,HIGH), digitalWrite(26,HIGH), digitalWrite(27,HIGH) ;
-  delay(2000);
-  digitalWrite(25,LOW), digitalWrite(26,LOW), digitalWrite(27,LOW);
-  delay(2000);
+  //digitalWrite(25,HIGH), digitalWrite(26,HIGH), digitalWrite(27,HIGH) ;
+  //%delay(2000);
+  //%digitalWrite(25,LOW), digitalWrite(26,LOW), digitalWrite(27,LOW);
+  //%delay(2000);
 
  
 
-/*
+
   digitalWrite(25,HIGH);
   digitalWrite(27,LOW);
   digitalWrite(26,LOW);
@@ -35,7 +35,7 @@ void loop() {
   digitalWrite(26,LOW);
   digitalWrite(25,LOW);
   delay(2000);
-*/
+
 
 
 }
