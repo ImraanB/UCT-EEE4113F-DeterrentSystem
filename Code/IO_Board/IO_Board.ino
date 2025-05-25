@@ -1,3 +1,9 @@
+/*
+  Imraan Banderker - BNDIMR003
+
+  IO_Board runs the general operation of the deterrent device and sends event data to Camera_Board
+*/
+
 // Libraries
 #include <esp_now.h>
 #include <esp_wifi.h>
@@ -140,11 +146,8 @@ void loop() {
     }
     audioOff();
     light_all_Off();
-    myservo.write(servo_HP);
-    servoPos=HIGH;
-    
-
-  }else if (state=="warning"){
+    motorOff();
+   }else if (state=="warning"){
     // if no further movement, go back to idle after 10 seconds
     currentMillis = millis();
     if (currentMillis - previousMillis >= interval) {
@@ -314,6 +317,11 @@ void motor(){ //function to activate the motor
     }
 }
 
+void motorOff(){
+  myservo.write(servo_HP);
+  servoPos=HIGH;
+}
+
 void audioOn(){ //function to activate the auditory deterrents
   digitalWrite(32,HIGH);
   digitalWrite(12,HIGH);
@@ -330,8 +338,11 @@ void light_all_On(){ //function to turn all the lights on
   LEDstate=HIGH;
 }
 
-void light_all_Off(){ //function to turn all the lights off
-  digitalWrite(25,LOW), digitalWrite(26,LOW), digitalWrite(27,LOW);
+//function to turn all the lights off
+void light_all_Off(){ 
+  digitalWrite(25,LOW); 
+  digitalWrite(26,LOW); 
+  digitalWrite(27,LOW);
   LEDstate=LOW;
 }
 

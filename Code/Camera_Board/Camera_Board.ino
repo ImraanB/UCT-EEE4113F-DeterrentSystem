@@ -1,3 +1,9 @@
+/*
+  Imraan Banderker - BNDIMR003
+
+  Camera_Board logs event data sent from IO_Board to SD card and takes pictures
+*/
+
 // Libraries
 #include <esp_now.h>
 #include <WiFi.h>
