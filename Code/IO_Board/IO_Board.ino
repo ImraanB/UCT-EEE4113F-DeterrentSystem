@@ -26,7 +26,7 @@ int distToFence =100; //mm
 
 unsigned long currentMillis_2 =0;
 unsigned long previousMillis_2 = 0;    
-const long flash_interval = 600;  
+const long flash_interval = 100;  
 int LEDstate= LOW;
 
 unsigned long currentMillis_3 =0;
@@ -71,6 +71,7 @@ esp_now_peer_info_t peerInfo;
 void setup() {
   //Init Serial Monitor
   Serial.begin(115200);
+  delay(20000);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
   }
@@ -147,6 +148,7 @@ void loop() {
     audioOff();
     light_all_Off();
     motorOff();
+
    }else if (state=="warning"){
     // if no further movement, go back to idle after 10 seconds
     currentMillis = millis();
@@ -162,7 +164,7 @@ void loop() {
     }
 
     // deterrents for warning
-    flash_lights();
+    light_all_On();
   }
   
   else if (state=="highAlert"){
@@ -173,6 +175,7 @@ void loop() {
       state="emergency";
     }
     // deterrents for high alert
+    Serial.println("execute3");
     audioOn();
     flash_lights();
     motor();
@@ -184,7 +187,9 @@ void loop() {
     }
     //during emergency
     audioOff();
-    light_all_Off();
+    digitalWrite(27,HIGH);//turn front LED on
+    digitalWrite(26,LOW);//turn front LED on
+    digitalWrite(25,LOW);//turn front LED on
     myservo.write(servo_HP);
     servoPos=HIGH;
   }
